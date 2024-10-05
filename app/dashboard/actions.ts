@@ -9,6 +9,7 @@ export const fetchCars = async (): Promise<ICar[]> => {
   try {
     await connectDB();
     const data = await Car.find({});
+    revalidatePath("/dashboard");
 
     return data.map((car) => {
       const createdAt = moment(car.createdAt).format("DD/MM/YYYY");
