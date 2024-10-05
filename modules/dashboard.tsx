@@ -14,14 +14,19 @@ const DashboardPage = () => {
     error,
     isLoading,
   } = useQuery({
-    queryKey: ["cars"], // Correctly structure the query key
+    queryKey: ["cars"],
     queryFn: async () => {
-      const response = await fetch("/api/getCars"); // Adjust the path if needed
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+      try {
+        const response = await fetch("/api/getCars"); // Adjust the path if needed
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      } catch (error) {
+        console.log(error);
       }
-      return response.json();
     },
+    staleTime: 0,
   });
 
   if (isLoading) {
