@@ -33,7 +33,7 @@ export async function POST() {
   console.log("Checking for expiring documents...");
 
   try {
-    sendExpirationEmail({});
+    await sendExpirationEmail({});
 
     //   const cars = await Car.find({
     //     enabled: true,
