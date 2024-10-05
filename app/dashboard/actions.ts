@@ -87,9 +87,9 @@ export async function updateCar(plate_number: string, data: Partial<ICar>) {
       throw new Error("Nu au fost actualizate documente");
     } else {
       console.log("Document actualizat cu succes:", result);
+      revalidatePath("/dashboard");
       return { message: "Document actualizat cu succes" };
     }
-    revalidatePath("/dashboard");
   } catch (error) {
     console.log(error);
     throw new Error("Nu au fost actualizate documente");
@@ -109,9 +109,9 @@ export async function activateCar(plate_number: string, data: boolean) {
       throw new Error("Nu au fost actualizate documente");
     } else {
       console.log("Document actualizat cu succes:", result);
+      revalidatePath("/dashboard");
       return { message: "Document actualizat cu succes" };
     }
-    revalidatePath("/dashboard");
   } catch (error) {
     console.log(error);
     throw new Error("Nu au fost actualizate documente");
