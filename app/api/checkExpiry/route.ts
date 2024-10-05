@@ -21,13 +21,11 @@ async function sendExpirationEmail(carDetails: ObjectCar) {
     },
   });
 
-  const emailHtml = await DailyEmailHtml({ objCar: carDetails });
-
   await transporter.sendMail({
     from: process.env.APP_NAME,
     to: process.env.EMAIL_RECIPIENT,
     subject: "Aviz de expirare",
-    html: emailHtml,
+    text: `${JSON.stringify(carDetails)}`,
   });
 }
 
