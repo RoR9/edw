@@ -25,7 +25,7 @@ async function sendExpirationEmail(carDetails: ObjectCar) {
     from: process.env.APP_NAME,
     to: process.env.EMAIL_RECIPIENT,
     subject: "Aviz de expirare",
-    text: `test`,
+    text: `${JSON.stringify(carDetails)}`,
   });
 }
 
@@ -33,36 +33,34 @@ export async function POST() {
   console.log("Checking for expiring documents...");
 
   try {
-    await sendExpirationEmail({});
+    const cars = await Car.find({
+      enabled: true,
+    });
 
-    //   const cars = await Car.find({
-    //     enabled: true,
-    //   });
+    console.log(cars, "caretta");
 
-    //   console.log(cars, "caretta");
+    const today = moment();
 
-    //   const today = moment();
+    const objCar: ObjectCar = {};
+    for (const car of cars) {
+      const { documents } = car;
 
-    //   const objCar: ObjectCar = {};
-    //   for (const car of cars) {
-    //     const { documents } = car;
+      for (const [key, document] of Object.entries(documents)) {
+        const expiryDate = moment((document as IDocument).expiry);
+        const daysToExpire = expiryDate.diff(today, "days");
 
-    //     for (const [key, document] of Object.entries(documents)) {
-    //       const expiryDate = moment((document as IDocument).expiry);
-    //       const daysToExpire = expiryDate.diff(today, "days");
-
-    //       if (daysToExpire < 7 && daysToExpire >= 0) {
-    //         objCar[car.plate_number] = {
-    //           ...objCar[car.plate_number],
-    //           [key]: daysToExpire,
-    //         };
-    //       }
-    //     }
-    //   }
-    //   //If there is at least one car send the email
-    //   if (Object.keys(objCar).length) {
-    //     sendExpirationEmail(objCar);
-    //   }
+        if (daysToExpire < 7 && daysToExpire >= 0) {
+          objCar[car.plate_number] = {
+            ...objCar[car.plate_number],
+            [key]: daysToExpire,
+          };
+        }
+      }
+    }
+    //If there is at least one car send the email
+    if (Object.keys(objCar).length) {
+      await sendExpirationEmail(objCar);
+    }
   } catch (error) {
     console.error("Error during expiration check:", error);
   }
