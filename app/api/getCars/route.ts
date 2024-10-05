@@ -2,6 +2,8 @@
 import { fetchCars } from "@/app/dashboard/actions";
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const cars = await fetchCars();
