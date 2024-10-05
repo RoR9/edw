@@ -2,6 +2,7 @@ import nodemailer from "nodemailer";
 import moment from "moment";
 import Car, { IDocument } from "@/models/Car";
 import { DailyEmailHtml } from "@/components/emails/DailyReport";
+import { fetchCars } from "@/app/dashboard/actions";
 
 export const dynamic = "force-dynamic";
 export interface ObjectCar {
@@ -33,9 +34,7 @@ export async function POST() {
   console.log("Checking for expiring documents...");
 
   try {
-    const cars = await Car.find({
-      enabled: true,
-    });
+    const cars = await fetchCars();
 
     console.log(cars, "caretta");
 
