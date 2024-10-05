@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/checkExpiry",
+      "schedule": "35 21 * * *"
+    }
+  ]
+}

@@ -3,6 +3,7 @@ import moment from "moment";
 import Car, { IDocument } from "@/models/Car";
 import { DailyEmailHtml } from "@/components/emails/DailyReport";
 import connectDB from "@/db/db";
+import { NextRequest } from "next/server";
 
 export const dynamic = "force-dynamic";
 export interface ObjectCar {
@@ -32,7 +33,13 @@ async function sendExpirationEmail(carDetails: ObjectCar) {
   });
 }
 
-export async function POST() {
+export async function POST(request: NextRequest) {
+  const authHeader = request.headers.get("authorization");
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return new Response("Unauthorized", {
+      status: 401,
+    });
+  }
   console.log("Checking for expiring documents...");
 
   try {
