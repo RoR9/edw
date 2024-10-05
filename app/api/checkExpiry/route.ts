@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import moment from "moment";
 import Car, { IDocument } from "@/models/Car";
 import { DailyEmailHtml } from "@/components/emails/DailyReport";
-import { fetchCars } from "@/app/dashboard/actions";
+import connectDB from "@/db/db";
 
 export const dynamic = "force-dynamic";
 export interface ObjectCar {
@@ -22,11 +22,13 @@ async function sendExpirationEmail(carDetails: ObjectCar) {
     },
   });
 
+  const emailHtml = await DailyEmailHtml({ objCar: carDetails });
+
   await transporter.sendMail({
     from: process.env.APP_NAME,
     to: process.env.EMAIL_RECIPIENT,
     subject: "Aviz de expirare",
-    text: `${JSON.stringify(carDetails)}`,
+    html: emailHtml,
   });
 }
 
@@ -34,7 +36,10 @@ export async function POST() {
   console.log("Checking for expiring documents...");
 
   try {
-    const cars = await fetchCars();
+    await connectDB();
+    const cars = await Car.find({
+      enabled: true,
+    });
 
     console.log(cars, "caretta");
 
