@@ -3,6 +3,7 @@ import moment from "moment";
 import Car, { IDocument } from "@/models/Car";
 import { DailyEmailHtml } from "@/components/emails/DailyReport";
 
+export const dynamic = "force-dynamic";
 export interface ObjectCar {
   [plateNumber: string]: {
     [key: string]: number;

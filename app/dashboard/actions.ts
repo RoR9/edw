@@ -3,6 +3,7 @@
 import connectDB from "@/db/db";
 import Car, { ICar } from "@/models/Car";
 import moment from "moment";
+import { revalidatePath } from "next/cache";
 
 export const fetchCars = async (): Promise<ICar[]> => {
   try {
@@ -51,6 +52,7 @@ export const deleteCar = async (id: string) => {
     if (!result) {
       throw new Error("Nu a putut fi gasit");
     }
+    revalidatePath("/dashboard");
     return { message: "Operatiune reusita" };
   } catch (error) {
     console.log(error);
@@ -64,6 +66,7 @@ export async function createCar(data: { plate_number: string }) {
 
     const newCar = new Car(data);
     await newCar.save();
+    revalidatePath("/dashboard");
   } catch (error) {
     console.error(error);
     throw new Error("Nr de inamtriculare este folosit");
@@ -85,6 +88,7 @@ export async function updateCar(plate_number: string, data: Partial<ICar>) {
       console.log("Document actualizat cu succes:", result);
       return { message: "Document actualizat cu succes" };
     }
+    revalidatePath("/dashboard");
   } catch (error) {
     console.log(error);
     throw new Error("Nu au fost actualizate documente");
@@ -106,6 +110,7 @@ export async function activateCar(plate_number: string, data: boolean) {
       console.log("Document actualizat cu succes:", result);
       return { message: "Document actualizat cu succes" };
     }
+    revalidatePath("/dashboard");
   } catch (error) {
     console.log(error);
     throw new Error("Nu au fost actualizate documente");
