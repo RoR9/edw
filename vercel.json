@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/checkExpiry",
-      "schedule": "55 21 * * *"
+      "schedule": "35 22 * * *"
     }
   ]
 }
