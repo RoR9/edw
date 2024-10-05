@@ -25,7 +25,7 @@ async function sendExpirationEmail(carDetails: ObjectCar) {
     from: process.env.APP_NAME,
     to: process.env.EMAIL_RECIPIENT,
     subject: "Aviz de expirare",
-    text: `${JSON.stringify(carDetails)}`,
+    text: `test`,
   });
 }
 
