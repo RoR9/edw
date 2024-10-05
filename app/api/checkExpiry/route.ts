@@ -33,34 +33,36 @@ export async function POST() {
   console.log("Checking for expiring documents...");
 
   try {
-    const cars = await Car.find({
-      enabled: true,
-    });
+    sendExpirationEmail({});
 
-    console.log(cars, "caretta");
+    //   const cars = await Car.find({
+    //     enabled: true,
+    //   });
 
-    const today = moment();
+    //   console.log(cars, "caretta");
 
-    const objCar: ObjectCar = {};
-    for (const car of cars) {
-      const { documents } = car;
+    //   const today = moment();
 
-      for (const [key, document] of Object.entries(documents)) {
-        const expiryDate = moment((document as IDocument).expiry);
-        const daysToExpire = expiryDate.diff(today, "days");
+    //   const objCar: ObjectCar = {};
+    //   for (const car of cars) {
+    //     const { documents } = car;
 
-        if (daysToExpire < 7 && daysToExpire >= 0) {
-          objCar[car.plate_number] = {
-            ...objCar[car.plate_number],
-            [key]: daysToExpire,
-          };
-        }
-      }
-    }
-    //If there is at least one car send the email
-    if (Object.keys(objCar).length) {
-      sendExpirationEmail(objCar);
-    }
+    //     for (const [key, document] of Object.entries(documents)) {
+    //       const expiryDate = moment((document as IDocument).expiry);
+    //       const daysToExpire = expiryDate.diff(today, "days");
+
+    //       if (daysToExpire < 7 && daysToExpire >= 0) {
+    //         objCar[car.plate_number] = {
+    //           ...objCar[car.plate_number],
+    //           [key]: daysToExpire,
+    //         };
+    //       }
+    //     }
+    //   }
+    //   //If there is at least one car send the email
+    //   if (Object.keys(objCar).length) {
+    //     sendExpirationEmail(objCar);
+    //   }
   } catch (error) {
     console.error("Error during expiration check:", error);
   }
