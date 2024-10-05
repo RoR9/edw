@@ -1,0 +1,113 @@
+"use server";
+
+import connectDB from "@/db/db";
+import Car, { ICar } from "@/models/Car";
+import moment from "moment";
+
+export const fetchCars = async (): Promise<ICar[]> => {
+  try {
+    await connectDB();
+    const data = await Car.find({});
+
+    return data.map((car) => {
+      const createdAt = moment(car.createdAt).format("DD/MM/YYYY");
+      const updatedAt = moment(car.updatedAt).format("DD/MM/YYYY");
+
+      console.log(createdAt);
+
+      return {
+        plate_number: car.plate_number,
+        createdAt,
+        updatedAt,
+        id: car._id,
+        documents: car.documents,
+        enabled: car.enabled,
+      };
+    }) as unknown as ICar[];
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+export const fetchCar = async (id: string): Promise<ICar> => {
+  try {
+    await connectDB();
+    const result = await Car.findById(id);
+    if (!result) {
+      throw new Error("Operatiune nereusita");
+    }
+    return result;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Operatiune nereusita");
+  }
+};
+
+export const deleteCar = async (id: string) => {
+  try {
+    await connectDB();
+    const result = await Car.findByIdAndDelete(id);
+    if (!result) {
+      throw new Error("Nu a putut fi gasit");
+    }
+    return { message: "Operatiune reusita" };
+  } catch (error) {
+    console.log(error);
+    throw new Error("Operatiune nereusita");
+  }
+};
+
+export async function createCar(data: { plate_number: string }) {
+  try {
+    await connectDB();
+
+    const newCar = new Car(data);
+    await newCar.save();
+  } catch (error) {
+    console.error(error);
+    throw new Error("Nr de inamtriculare este folosit");
+  }
+}
+
+export async function updateCar(plate_number: string, data: Partial<ICar>) {
+  try {
+    await connectDB();
+
+    const result = await Car.findOneAndUpdate(
+      { plate_number },
+      { documents: data }
+    );
+
+    if (result.modifiedCount === 0) {
+      throw new Error("Nu au fost actualizate documente");
+    } else {
+      console.log("Document actualizat cu succes:", result);
+      return { message: "Document actualizat cu succes" };
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error("Nu au fost actualizate documente");
+  }
+}
+
+export async function activateCar(plate_number: string, data: boolean) {
+  try {
+    await connectDB();
+
+    const result = await Car.findOneAndUpdate(
+      { plate_number },
+      { enabled: data }
+    );
+
+    if (result.modifiedCount === 0) {
+      throw new Error("Nu au fost actualizate documente");
+    } else {
+      console.log("Document actualizat cu succes:", result);
+      return { message: "Document actualizat cu succes" };
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error("Nu au fost actualizate documente");
+  }
+}
