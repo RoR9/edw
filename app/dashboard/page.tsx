@@ -17,7 +17,7 @@ const Page = async () => {
         <h1 className="text-5xl mb-10">Dashboard</h1>
         <CreateCarDialog />
         <DataTable columns={carColumns} data={cars} />
-        <CheckExpiryButton />
+        {process.env.NODE_ENV === "development" && <CheckExpiryButton />}
       </div>
     </div>
   );

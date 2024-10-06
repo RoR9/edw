@@ -14,9 +14,9 @@ export interface ObjectCar {
 
 async function sendExpirationEmail(carDetails: ObjectCar) {
   const transporter = nodemailer.createTransport({
-    service: "gmail",
-    host: "smtp.gmail.com",
-    secure: false,
+    host: "smtp.zoho.eu",
+    port: 465,
+    secure: true,
     auth: {
       user: process.env.APP_NAME,
       pass: process.env.APP_PASS,
