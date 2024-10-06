@@ -5,7 +5,6 @@ import { DataTable } from "@/components/ui/data-table";
 
 import React from "react";
 
-import CheckExpiryButton from "@/components/custom/ExpiryButton";
 import { fetchCars } from "@/app/dashboard/actions";
 
 const Page = async () => {
@@ -17,7 +16,6 @@ const Page = async () => {
         <h1 className="text-5xl mb-10">Dashboard</h1>
         <CreateCarDialog />
         <DataTable columns={carColumns} data={cars} />
-        {process.env.NODE_ENV === "development" && <CheckExpiryButton />}
       </div>
     </div>
   );
