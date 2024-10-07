@@ -6,6 +6,8 @@ import connectDB from "@/db/db";
 import { NextRequest } from "next/server";
 
 export const dynamic = "force-dynamic";
+
+const recipients = [process.env.EMAIL_RECIPIENT, process.env.EMAIL_RECIPIENT2];
 export interface ObjectCar {
   [plateNumber: string]: {
     [key: string]: number;
@@ -27,7 +29,7 @@ async function sendExpirationEmail(carDetails: ObjectCar) {
 
   await transporter.sendMail({
     from: process.env.APP_NAME,
-    to: process.env.EMAIL_RECIPIENT,
+    to: recipients.join(","),
     subject: "Aviz de expirare",
     html: emailHtml,
   });
