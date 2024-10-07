@@ -70,8 +70,6 @@ export async function GET(request: NextRequest) {
 
     const today = moment();
 
-    throw new Error("Ooops something went wrong");
-
     const objCar: ObjectCar = {};
     for (const car of cars) {
       const { documents } = car;
