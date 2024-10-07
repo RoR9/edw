@@ -28,7 +28,7 @@ async function sendErrorExpirationMail(error: Error) {
     from: process.env.APP_NAME,
     to: process.env.EMAIL_ADMIN,
     subject: "Aviz de expirare",
-    text: `A intervenit o errore: ${JSON.stringify(error)}`,
+    text: `A intervenit o errore: ${error}`,
   });
 }
 
