@@ -14,6 +14,24 @@ export interface ObjectCar {
   };
 }
 
+async function sendErrorExpirationMail(error: Error) {
+  const transporter = nodemailer.createTransport({
+    host: "smtp.zoho.eu",
+    port: 465,
+    secure: true,
+    auth: {
+      user: process.env.APP_NAME,
+      pass: process.env.APP_PASS,
+    },
+  });
+  await transporter.sendMail({
+    from: process.env.APP_NAME,
+    to: process.env.EMAIL_ADMIN,
+    subject: "Aviz de expirare",
+    text: `A intervenit o errore: ${JSON.stringify(error)}`,
+  });
+}
+
 async function sendExpirationEmail(carDetails: ObjectCar) {
   const transporter = nodemailer.createTransport({
     host: "smtp.zoho.eu",
@@ -50,9 +68,9 @@ export async function GET(request: NextRequest) {
       enabled: true,
     });
 
-    console.log(cars, "caretta");
-
     const today = moment();
+
+    throw new Error("Ooops something went wrong");
 
     const objCar: ObjectCar = {};
     for (const car of cars) {
@@ -75,6 +93,7 @@ export async function GET(request: NextRequest) {
       await sendExpirationEmail(objCar);
     }
   } catch (error) {
+    await sendErrorExpirationMail(error as Error);
     console.error("Error during expiration check:", error);
   }
 
