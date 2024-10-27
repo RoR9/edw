@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { Loader2Icon } from "lucide-react";
+import { longFormatters } from "date-fns";
 
 interface FormDataType {
   email: string;
@@ -20,6 +22,7 @@ const Page = () => {
     email: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -35,6 +38,7 @@ const Page = () => {
     });
 
     try {
+      setIsLoading(true);
       const response = await signin(data);
 
       if (response.errors) {
@@ -48,6 +52,8 @@ const Page = () => {
     } catch (error) {
       console.error("Signin error:", error);
       toast.error("An error occurred during sign in");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -79,7 +85,13 @@ const Page = () => {
             required
           />
         </div>
-        <Button type="submit">Logare</Button>
+        <Button type="submit">
+          {isLoading ? (
+            <Loader2Icon className="w-5 h-5 mr-2 animate-spin" />
+          ) : (
+            "Logare"
+          )}
+        </Button>
       </form>
     </div>
   );
