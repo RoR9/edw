@@ -3,7 +3,13 @@
 import connectDB from "@/db/db";
 import Car, { ICar } from "@/models/Car";
 import moment from "moment";
+import { MongooseError } from "mongoose";
 import { revalidatePath } from "next/cache";
+
+interface MongoDBError extends Error {
+  code?: number; // Optional, since not all errors will have a code
+  keyValue?: Record<string, unknown>; // Object for key-value pairs causing the error
+}
 
 export const fetchCars = async (): Promise<ICar[]> => {
   try {
@@ -69,8 +75,12 @@ export async function createCar(data: { plate_number: string }) {
     await newCar.save();
     revalidatePath("/dashboard");
   } catch (error) {
-    console.error(error);
-    throw new Error("Nr de inamtriculare este folosit");
+    console.error(error as MongooseError);
+    if ((error as MongoDBError).code === 11000) {
+      throw new Error("Nr de inamtriculare este folosit");
+    } else {
+      throw new Error("Ceva nu a mers bine");
+    }
   }
 }
 

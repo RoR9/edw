@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { MongooseError } from "mongoose";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -31,8 +32,8 @@ export function CreateCarDialog() {
       setIsDialogOpen(false);
       router.refresh();
     } catch (error) {
-      console.error("Error creating car:", error);
-      toast.error("Nr de inmatriculare este deja utilizat");
+      console.log("Error creating car:", error);
+      toast.error((error as MongooseError).message);
     }
   };
 
