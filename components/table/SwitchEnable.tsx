@@ -18,8 +18,6 @@ const SwitchEnable: React.FC<Props> = ({ isInitialChecked, plateNumber }) => {
   const [isLoading, setIsLoading] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const loadingStartTimeRef = useRef<number | null>(null);
-  const sleep = (ms: number) =>
-    new Promise((resolve) => setTimeout(resolve, ms));
 
   const handleChange = async (isCheck: boolean) => {
     setIsLoading(true);
