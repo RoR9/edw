@@ -74,13 +74,16 @@ export async function createCar(data: { plate_number: string }) {
     const newCar = new Car(data);
     await newCar.save();
     revalidatePath("/dashboard");
+    return { success: true };
   } catch (error) {
-    console.error(error as MongooseError);
+    console.error("Error creating car:", error);
+    // Create a user-friendly message
+    let errorMessage = "Ceva nu a mers bine";
     if ((error as MongoDBError).code === 11000) {
-      throw new Error("Nr de inamtriculare este folosit");
-    } else {
-      throw new Error("Ceva nu a mers bine");
+      errorMessage = "Nr de inmatriculare este folosit";
     }
+
+    return { success: false, message: errorMessage };
   }
 }
 

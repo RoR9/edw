@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { MongooseError } from "mongoose";
 import { useRouter } from "next/navigation";
+import { resolve } from "path";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -27,13 +28,17 @@ export function CreateCarDialog() {
 
     try {
       // Call the server action directly
-      await createCar({ plate_number: plateNumber });
-      toast.success("Vehiculul este adaugat cu sucess!");
-      setIsDialogOpen(false);
-      router.refresh();
+      const response = await createCar({ plate_number: plateNumber });
+      if (response?.success) {
+        toast.success("Vehiculul este adaugat cu sucess!");
+        setIsDialogOpen(false);
+        router.refresh();
+      } else {
+        toast.error(response?.message);
+      }
     } catch (error) {
       console.log("Error creating car:", error);
-      toast.error((error as MongooseError).message);
+      toast.error("A fost o eroare neasteptata.");
     }
   };
 

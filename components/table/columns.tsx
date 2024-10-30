@@ -3,17 +3,14 @@ import { ICar } from "@/models/Car";
 import { ColumnDef } from "@tanstack/react-table";
 import DeleteDialog from "../custom/DeleteDialog";
 import { deleteCar } from "@/app/dashboard/actions";
-import ActionButton from "./ActionButton";
 import BadgeAlerts from "../custom/BadgeAlerts";
 import { cn, diffDays } from "@/lib/utils";
 import EditButton from "./EditButton";
 import { Badge } from "lucide-react";
-import { Switch } from "../ui/switch";
 import SwitchEnable from "./SwitchEnable";
 
 export const carColumns: ColumnDef<ICar>[] = [
   {
-    accessorKey: "plate_number",
     header: "Nr de inmatriculare",
     cell: ({ row }) => {
       return (

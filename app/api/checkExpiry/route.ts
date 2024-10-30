@@ -4,10 +4,15 @@ import Car, { IDocument } from "@/models/Car";
 import { DailyEmailHtml } from "@/components/emails/DailyReport";
 import connectDB from "@/db/db";
 import { NextRequest } from "next/server";
+import { DAYS_TO_EXPIRE } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
-const recipients = [process.env.EMAIL_RECIPIENT, process.env.EMAIL_RECIPIENT2];
+const recipients = [
+  process.env.EMAIL_RECIPIENT,
+  process.env.EMAIL_RECIPIENT2,
+  process.env.EMAIL_RECIPIENT3,
+];
 export interface ObjectCar {
   [plateNumber: string]: {
     [key: string]: number;
@@ -78,7 +83,7 @@ export async function GET(request: NextRequest) {
         const expiryDate = moment((document as IDocument).expiry);
         const daysToExpire = expiryDate.diff(today, "days");
 
-        if (daysToExpire < 7 && daysToExpire >= 0) {
+        if (daysToExpire <= DAYS_TO_EXPIRE && daysToExpire >= 0) {
           objCar[car.plate_number] = {
             ...objCar[car.plate_number],
             [key]: daysToExpire,

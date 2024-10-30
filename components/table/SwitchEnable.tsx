@@ -11,12 +11,15 @@ type Props = {
 };
 
 const LOADER_TIME_MS = 700;
+const MAX_LOADER_TIME_MS = 10000;
 
 const SwitchEnable: React.FC<Props> = ({ isInitialChecked, plateNumber }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const loadingStartTimeRef = useRef<number | null>(null);
+  const sleep = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
 
   const handleChange = async (isCheck: boolean) => {
     setIsLoading(true);
@@ -24,8 +27,14 @@ const SwitchEnable: React.FC<Props> = ({ isInitialChecked, plateNumber }) => {
       setIsLoading(false);
     }, LOADER_TIME_MS);
     loadingStartTimeRef.current = Date.now();
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(reject, MAX_LOADER_TIME_MS)
+    );
     try {
-      await activateCar(plateNumber, isCheck);
+      await Promise.race([
+        await activateCar(plateNumber, isCheck),
+        timeoutPromise,
+      ]);
       router.refresh();
     } catch (error) {
       console.log(error);
